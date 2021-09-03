@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/clh021/crud-api/web/opera"
@@ -23,9 +24,11 @@ func GetRouter() *gin.Engine {
 	r.DELETE("/:tablename/:primaryVal", opera.Delete)
 	return r
 }
+
+var Conf = loadConfig()
+
 func Main() {
-	loadConfig()
 	r := GetRouter()
 	// TODO port set by cobra default
-	r.Run(":8000")
+	r.Run(fmt.Sprintf(":%d", Conf.Port))
 }

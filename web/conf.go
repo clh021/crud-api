@@ -1,13 +1,30 @@
 package web
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/viper"
 )
 
-func loadConfig() {
+type Server struct {
+	ConnMaxLifetime string `yaml: connMaxLifetime`
+	Dsn             string `yaml: dsn`
+	MaxIdleConns    int32  `yaml: maxIdleConns`
+	MaxOpenConns    int32  `yaml: maxOpenConns`
+	Tag             string `yaml: tag`
+	Type            string `yaml: type`
+}
+type Config struct {
+	Port    int32
+	Servers []Server
+}
+
+func defaultConfig() Config {
+	return Config{
+		Port: 8000,
+	}
+}
+func loadConfig() Config {
 	viper.SetConfigName(".crud-api")
 	viper.SetConfigType("yaml")
 	// 在 Home 及当前目录下面查找名为 ".crud-api" 的配置文件
@@ -20,7 +37,10 @@ func loadConfig() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	testvar := viper.Get("servers")
-	fmt.Println(testvar)
+	config := defaultConfig()
+	if err := viper.Unmarshal(&config); err != nil {
+		panic(err)
+	}
+	// fmt.Println(viper.Get("servers")) // test
+	return config
 }
