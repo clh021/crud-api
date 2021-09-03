@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 echo "正在准备编译标记版本"
 gitTime=$(date +00%y%m%d%H%M%S)
 gitCID=`git rev-parse HEAD`
