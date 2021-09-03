@@ -15,8 +15,15 @@ limitations under the License.
 */
 package main
 
-import "github.com/clh021/crud-api/cmd"
+import (
+	"fmt"
+
+	"github.com/clh021/crud-api/cmd"
+)
+
+var build = "not set"
 
 func main() {
+	fmt.Printf("Build: %s\n", build)
 	cmd.Execute()
 }

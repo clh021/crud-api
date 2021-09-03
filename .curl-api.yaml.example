@@ -1,0 +1,29 @@
+servers:
+  -
+    tag: aliyun1
+    type: mysql
+    # 空闲连接池中连接的最大数
+    maxIdleConns: 10
+    # 打开数据库连接的最大数量
+    maxOpenConns: 100
+    # 连接可复用的最大时间
+    ConnMaxLifetime: 3600
+    dsn: user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+  -
+    tag: qcloud1
+    type: mysql
+    dsn: user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+  -
+    tag: postgres1
+    type: postgres
+    dsn: host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai
+  -
+    tag: sqlite1
+    type: sqlite
+    dsn: test.db
+  -
+    tag: sqlserver1
+    type: sqlserver
+    dsn: sqlserver://gorm:LoremIpsum86@localhost:9930?database=gorm
+    
+  
