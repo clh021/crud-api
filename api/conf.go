@@ -1,4 +1,4 @@
-package web
+package api
 
 import (
 	"os"
@@ -7,12 +7,12 @@ import (
 )
 
 type Server struct {
-	ConnMaxLifetime string `yaml: connMaxLifetime`
-	Dsn             string `yaml: dsn`
-	MaxIdleConns    int32  `yaml: maxIdleConns`
-	MaxOpenConns    int32  `yaml: maxOpenConns`
-	Tag             string `yaml: tag`
-	Type            string `yaml: type`
+	ConnMaxLifetime string `yaml:"connMaxLifetime"`
+	Dsn             string `yaml:"dsn"`
+	MaxIdleConns    int32  `yaml:"maxIdleConns"`
+	MaxOpenConns    int32  `yaml:"maxOpenConns"`
+	Tag             string `yaml:"tag"`
+	Type            string `yaml:"type"`
 }
 type Config struct {
 	Port    int32
@@ -41,6 +41,6 @@ func loadConfig() Config {
 	if err := viper.Unmarshal(&config); err != nil {
 		panic(err)
 	}
-	// fmt.Println(viper.Get("servers")) // test
+	// fmt.Println(viper.Get("servers"))
 	return config
 }

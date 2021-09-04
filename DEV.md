@@ -22,6 +22,6 @@ Cobra 结构由三部分组成：命令 (commands)、参数 (arguments)、标志
 
 ```bash
 # 使用 cobra 创建 `web`,`conf` 三个命令
-cobra add web # 用于启动 web 服务
+cobra add main # 用于启动 主 服务（包含 api, web ui）
 cobra add conf # 用于创建和测试 配置文件
 ```
