@@ -1,4 +1,4 @@
-package api
+package conf
 
 import (
 	"os"
@@ -43,4 +43,10 @@ func loadConfig() Config {
 	}
 	// fmt.Println(viper.Get("servers"))
 	return config
+}
+
+var Conf = loadConfig()
+
+func Get() *Config {
+	return &Conf
 }

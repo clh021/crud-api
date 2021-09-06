@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 
+	"github.com/clh021/crud-api/api/conf"
 	"github.com/clh021/crud-api/api/database"
 	"github.com/clh021/crud-api/api/table"
 	"github.com/clh021/crud-api/ui"
@@ -30,10 +31,9 @@ func GetRouter() *gin.Engine {
 	return r
 }
 
-var Conf = loadConfig()
-
 func Main() {
-	port := fmt.Sprintf(":%d", Conf.Port)
+	c := conf.Get()
+	port := fmt.Sprintf(":%d", c.Port)
 	r := GetRouter()
 	r.Run(port)
 	// http.ListenAndServe(port, http.FileServer(http.FS(web)))
