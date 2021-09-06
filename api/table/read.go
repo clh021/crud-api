@@ -1,4 +1,4 @@
-package opera
+package table
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Update(c *gin.Context) {
+func Read(c *gin.Context) {
 	t := c.Param("tablename")
 	s := c.Query("size")
 	fmt.Printf("tablename: %s\n", t)

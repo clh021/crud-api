@@ -1,4 +1,4 @@
-package opera
+package table
 
 import (
 	"fmt"
