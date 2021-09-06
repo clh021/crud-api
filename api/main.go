@@ -1,41 +1,62 @@
 package api
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"net/http"
 
 	"github.com/clh021/crud-api/api/opera"
-
+	"github.com/clh021/crud-api/ui"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
-func favicon(c *gin.Context) {
-	c.Header("Content-Type", "image/x-icon")
-	c.Header("Cache-Control", "public, max-age=7776000")
-	c.String(http.StatusOK, "data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABmJLR0T///////8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAF0lEQVRIx2NgGAWjYBSMglEwCkbBSAcACBAAAeaR9cIAAAAASUVORK5CYII=\n")
+type embedFileSystem struct {
+	http.FileSystem
+}
+
+func (e embedFileSystem) Exists(prefix string, path string) bool {
+	_, err := e.Open(path)
+	if err != nil {
+		return false
+	}
+	return true
+}
+func EmbedFolder(fsEmbed embed.FS, targetPath string) static.ServeFileSystem {
+	fsys, err := fs.Sub(fsEmbed, targetPath)
+	if err != nil {
+		panic(err)
+	}
+	return embedFileSystem{
+		FileSystem: http.FS(fsys),
+	}
 }
 func GetRouter() *gin.Engine {
+	gin.SetMode(gin.DebugMode)
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
+	// ui
+	r.Use(static.Serve("/", EmbedFolder(ui.Dist, "dist")))
 
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "welcome for you!")
-	})
-	r.GET("/favicon.ico", favicon) // 包装进入静态资源，加入 favicon.ico
-	// 后期会考虑加入请求生成器，列举出所有数据库，表格，通过勾选操作查询
-	// 加入 表格优化操作，清空操作
-	r.GET("/:tablename", opera.List)
-	r.POST("/:tablename", opera.Create)
-	r.GET("/:tablename/:primaryVal", opera.Read)
-	r.PUT("/:tablename/:primaryVal", opera.Update)
-	r.DELETE("/:tablename/:primaryVal", opera.Delete)
+	// api
+	api := r.Group("/api")
+	{
+		api.GET("/:tablename", opera.List)
+		api.POST("/:tablename", opera.Create)
+		api.GET("/:tablename/:primaryVal", opera.Read)
+		api.PUT("/:tablename/:primaryVal", opera.Update)
+		api.DELETE("/:tablename/:primaryVal", opera.Delete)
+	}
 	return r
 }
 
 var Conf = loadConfig()
 
 func Main() {
+	port := fmt.Sprintf(":%d", Conf.Port)
 	r := GetRouter()
-	r.Run(fmt.Sprintf(":%d", Conf.Port))
+	r.Run(port)
+	// http.ListenAndServe(port, http.FileServer(http.FS(web)))
 }

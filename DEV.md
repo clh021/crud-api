@@ -25,3 +25,7 @@ Cobra 结构由三部分组成：命令 (commands)、参数 (arguments)、标志
 cobra add main # 用于启动 主 服务（包含 api, web ui）
 cobra add conf # 用于创建和测试 配置文件
 ```
+
+## 鸣谢
+[go-gin-api](https://github.com/xinliangnote/go-gin-api)
+[go-crud-api](https://github.com/mevdschee/go-crud-api)
