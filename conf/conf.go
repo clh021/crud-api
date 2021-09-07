@@ -45,8 +45,20 @@ func loadConfig() Config {
 	return config
 }
 
-var Conf = loadConfig()
+var conf = loadConfig()
 
 func Get() *Config {
-	return &Conf
+	return &conf
+}
+func GetServerByTag(tag string) *Server {
+	for _, s := range conf.Servers {
+		if s.Tag == tag {
+			return &s
+		}
+	}
+	return nil
+}
+func Refresh() *Config {
+	conf = loadConfig()
+	return &conf
 }
