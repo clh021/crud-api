@@ -13,7 +13,7 @@ var httpExpectConf *httpexpect.Config
 
 func HttpExpectConf(t *testing.T) *httpexpect.Config {
 	if httpExpectConf == nil {
-		s, _ := EngineServer(gin.ReleaseMode)
+		s, _ := EngineServer(gin.TestMode)
 		httpExpectConf = &httpexpect.Config{
 			Client: &http.Client{
 				Transport: httpexpect.NewBinder(s.Engine()),

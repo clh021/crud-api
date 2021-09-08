@@ -27,10 +27,10 @@ func (m *Server) Engine() *gin.Engine {
 	return m.engine
 }
 func InitServer(ginMode string) *Server {
-	if ginMode == gin.ReleaseMode {
+	if ginMode == gin.TestMode {
+		gin.SetMode(ginMode)
 		gin.DefaultWriter = ioutil.Discard
 	}
-	gin.SetMode(ginMode)
 	return &Server{
 		engine: gin.Default(),
 	}
