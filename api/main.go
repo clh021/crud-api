@@ -8,11 +8,12 @@ import (
 	"github.com/clh021/crud-api/conf"
 	"github.com/clh021/crud-api/ui"
 	"github.com/gin-gonic/contrib/static"
+	"github.com/gin-gonic/gin"
 )
 
-func EngineServer() (*Server, int32) {
+func EngineServer(ginMode string) (*Server, int32) {
 	c := conf.Get()
-	s := InitServer()
+	s := InitServer(ginMode)
 	s.AddService(database.New(), "/db")
 	s.AddService(table.New(), "/table")
 	s.AddMiddleware(static.Serve("/", EmbedFolder(ui.Dist, "dist")))
@@ -20,7 +21,7 @@ func EngineServer() (*Server, int32) {
 }
 
 func Main() {
-	s, p := EngineServer()
+	s, p := EngineServer(gin.ReleaseMode)
 	port := fmt.Sprintf(":%d", p)
 	s.Run(port)
 	// http.ListenAndServe(port, http.FileServer(http.FS(web)))

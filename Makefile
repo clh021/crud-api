@@ -1,4 +1,4 @@
-.PHONY: generate test
+.PHONY: generate test serve
 
 generate:
 	@go mod tidy

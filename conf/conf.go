@@ -33,6 +33,7 @@ func loadConfig() Config {
 		viper.AddConfigPath(home)
 	}
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("..")
 	err = viper.ReadInConfig()
 	if err != nil {
 		panic(err)

@@ -1,6 +1,10 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"io/ioutil"
+
+	"github.com/gin-gonic/gin"
+)
 
 type Service interface {
 	Register(*gin.RouterGroup)
@@ -22,7 +26,11 @@ func (m *Server) Run(addr string) {
 func (m *Server) Engine() *gin.Engine {
 	return m.engine
 }
-func InitServer() *Server {
+func InitServer(ginMode string) *Server {
+	if ginMode == gin.ReleaseMode {
+		gin.DefaultWriter = ioutil.Discard
+	}
+	gin.SetMode(ginMode)
 	return &Server{
 		engine: gin.Default(),
 	}

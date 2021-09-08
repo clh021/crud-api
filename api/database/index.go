@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/clh021/crud-api/conf"
@@ -25,16 +24,19 @@ func New() *databaseManager {
 	return &databaseManager{}
 }
 func (d *databaseManager) Register(r *gin.RouterGroup) {
+	r.GET("/fill-test-data", d.FillTestData)
 	r.GET("/:dbname", d.List)
+}
+func (d *databaseManager) FillTestData(c *gin.Context) {
+	t := c.Param("table")
+	s := c.Query("size")
+	tag := c.GetHeader("tag")
+	c.JSON(200, gin.H{"table": t, "size": s, "tag": tag})
 }
 func (d *databaseManager) List(c *gin.Context) {
 	t := c.Param("tablename")
 	s := c.Query("size")
-	fmt.Printf("tablename: %s\n", t)
-	fmt.Printf("size: %s\n", s)
-	respone := fmt.Sprintf("这里将显示 表 %s，size %s !", t, s)
-	// c.String(http.StatusOK, respone)
-	c.JSON(200, gin.H{"message": respone, "table": t, "size": s})
+	c.JSON(200, gin.H{"table": t, "size": s})
 }
 func (d *databaseManager) getDialectorByTag(tag string) gorm.Dialector {
 	c := conf.GetServerByTag(tag)
