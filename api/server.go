@@ -19,6 +19,9 @@ func (m *Server) AddMiddleware(middleware gin.HandlerFunc) {
 func (m *Server) Run(addr string) {
 	m.engine.Run(addr)
 }
+func (m *Server) Engine() *gin.Engine {
+	return m.engine
+}
 func InitServer() *Server {
 	return &Server{
 		engine: gin.Default(),

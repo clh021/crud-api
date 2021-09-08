@@ -26,6 +26,13 @@ cobra add main # 用于启动 主 服务（包含 api, web ui）
 cobra add conf # 用于创建和测试 配置文件
 ```
 
+## 使用目标
+
+```
+/db/mysql1/conn  链接 mysql1
+/table/:tablename 查询数据         header 传递 使用哪个链接哪个数据库
+```
+
 ## 鸣谢
 [go-gin-api](https://github.com/xinliangnote/go-gin-api)
 [go-crud-api](https://github.com/mevdschee/go-crud-api)

@@ -1,4 +1,4 @@
-.PHONY: generate
+.PHONY: generate test
 
 generate:
 	@go mod tidy
@@ -19,4 +19,7 @@ build: generate
 run:
 	@./bin/crud-api
 
-test: build run
+test: 
+	go test -v ./...
+
+serve: build run
