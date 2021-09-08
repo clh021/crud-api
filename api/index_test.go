@@ -14,7 +14,7 @@ var httpExpectConf *httpexpect.Config
 func HttpExpectConf(t *testing.T) *httpexpect.Config {
 	if httpExpectConf == nil {
 		s, _ := EngineServer(gin.ReleaseMode)
-		return &httpexpect.Config{
+		httpExpectConf = &httpexpect.Config{
 			Client: &http.Client{
 				Transport: httpexpect.NewBinder(s.Engine()),
 				Jar:       httpexpect.NewJar(),
@@ -27,8 +27,8 @@ func HttpExpectConf(t *testing.T) *httpexpect.Config {
 }
 func HttpExpectConfDebug(t *testing.T) *httpexpect.Config {
 	if httpExpectConf == nil {
-		c := HttpExpectConf(t)
-		c.Printers = []httpexpect.Printer{
+		_ = HttpExpectConf(t)
+		httpExpectConf.Printers = []httpexpect.Printer{
 			httpexpect.NewCurlPrinter(t),
 			httpexpect.NewDebugPrinter(t, true),
 		}
