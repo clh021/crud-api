@@ -12,7 +12,7 @@ import (
 var httpExpectConf *httpexpect.Config
 
 func HttpExpectConf(t *testing.T) *httpexpect.Config {
-	if httpExpectConf != nil {
+	if httpExpectConf == nil {
 		s, _ := EngineServer(gin.ReleaseMode)
 		return &httpexpect.Config{
 			Client: &http.Client{
@@ -26,7 +26,7 @@ func HttpExpectConf(t *testing.T) *httpexpect.Config {
 	return httpExpectConf
 }
 func HttpExpectConfDebug(t *testing.T) *httpexpect.Config {
-	if httpExpectConf != nil {
+	if httpExpectConf == nil {
 		c := HttpExpectConf(t)
 		c.Printers = []httpexpect.Printer{
 			httpexpect.NewCurlPrinter(t),
@@ -41,5 +41,7 @@ func TestDBFillTestData(t *testing.T) {
 		WithHeader("tag", "sqlite1").
 		Expect().
 		Status(http.StatusOK).
-		JSON().Object().Keys().ContainsOnly("size", "table", "tag")
+		JSON().Object().
+		ContainsKey("tag").
+		ValueEqual("tag", "sqlite1")
 }

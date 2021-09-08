@@ -8,7 +8,6 @@ require (
 	github.com/gin-gonic/gin v1.7.4
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
-	github.com/steinfletcher/apitest v1.5.11
 	gorm.io/driver/mysql v1.1.2
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/driver/sqlite v1.1.4
