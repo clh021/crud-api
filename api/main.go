@@ -12,7 +12,7 @@ import (
 )
 
 func EngineServer(ginMode string) (*Server, int32) {
-	c := conf.Get()
+	c := conf.New()
 	s := InitServer(ginMode)
 	s.AddService(database.New(), "/db")
 	s.AddService(table.New(), "/table")

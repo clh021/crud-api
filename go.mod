@@ -6,6 +6,7 @@ require (
 	github.com/gavv/httpexpect v2.0.0+incompatible
 	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
 	github.com/gin-gonic/gin v1.7.4
+	github.com/google/uuid v1.1.2
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1
 	gorm.io/driver/mysql v1.1.2

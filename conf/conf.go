@@ -48,7 +48,7 @@ func loadConfig() Config {
 
 var conf = loadConfig()
 
-func Get() *Config {
+func New() *Config {
 	return &conf
 }
 
@@ -59,6 +59,10 @@ func GetServerByTag(tag string) *Server {
 		}
 	}
 	return nil
+}
+
+func GetFirstServer() Server {
+	return conf.Servers[0]
 }
 
 func Refresh() *Config {
