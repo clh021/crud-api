@@ -9,17 +9,11 @@ import (
 //Base 基础默认字段
 type Base struct {
 	// stupid id type
-	ID string `gorm:"type:varchar(36);primary_key" json:"id"`
-
-	//UnixTime
-	//TODO: using gorm hook to update it automatically
-	Created uint `gorm:"type:int(10);not null" json:"created"`
-	Updated uint `gorm:"type:int(10);default:0" json:"-"`
-
-	//TODO: REMOVE below
-	Deleted  uint   `gorm:"type:int(10);default:0" json:"-"`
-	Handlers string `gorm:"type:varchar(36);default:''" json:"-"`
-	State    uint8  `gorm:"type:tinyint(1);default:1" json:"-"`
+	ID      string `gorm:"type:varchar(36);primary_key;comment:编号" json:"id"`
+	Created uint   `gorm:"type:int(10);not null;comment:创建时间" json:"created"`
+	Updated uint   `gorm:"type:int(10);default:0;comment:更新时间" json:"updated"`
+	Deleted uint   `gorm:"type:int(10);default:0;comment:删除时间" json:"deleted"`
+	State   uint8  `gorm:"type:tinyint(1);default:1;comment:状态" json:"state"`
 }
 
 type Attachment struct {
@@ -52,11 +46,11 @@ func (a *Attachments) Scan(src interface{}) error  { return ScanAny(src, a) }
 
 type TestTable struct {
 	Base
-	Name        string       `gorm:"type:varchar(128);not null" json:"name" binding:"required"` //名称
-	Address     string       `gorm:"type:varchar(256);not null" json:"address"`                 //地址
-	Content     string       `gorm:"type:text;not null" json:"content" binding:"required"`      //内容
-	Contact     string       `gorm:"type:varchar(64);not null" json:"contact"`                  //联系人
-	Email       string       `gorm:"type:varchar(128);not null" json:"email"`                   //邮箱
-	Tag         string       `gorm:"type:varchar(256);not null" json:"tag"`
-	Attachments *Attachments `gorm:"type:text" json:"attachments"`
+	Name        string       `gorm:"type:varchar(128);not null;comment:名称" json:"name" binding:"required"` //名称
+	Address     string       `gorm:"type:varchar(256);not null;comment:地址" json:"address"`                 //地址
+	Content     string       `gorm:"type:text;not null;comment:内容" json:"content" binding:"required"`      //内容
+	Contact     string       `gorm:"type:varchar(64);not null;comment:联系人" json:"contact"`                 //联系人
+	Email       string       `gorm:"type:varchar(128);not null;comment:邮箱" json:"email"`                   //邮箱
+	Tag         string       `gorm:"type:varchar(256);not null;comment:标签" json:"tag"`
+	Attachments *Attachments `gorm:"type:text;comment:附件" json:"attachments"`
 }

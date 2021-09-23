@@ -17,6 +17,8 @@ func (m mockManager) ReSetAll() {
 	m.initTestData()
 }
 func (m mockManager) initTestTable() {
+	// 测试这一句并不起作用，始终继承自 数据库设置的默认 chartset 值，数据库创建时才是关键
+	// m.db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
 	m.db.AutoMigrate(&TestTable{})
 }
 func (m mockManager) initTestData() {

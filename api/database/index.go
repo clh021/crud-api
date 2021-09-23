@@ -19,8 +19,17 @@ func New() *databaseManager {
 	return &databaseManager{}
 }
 func (d *databaseManager) Register(r *gin.RouterGroup) {
+	// 创建测试表，填充测试数据
+	// 未指定具体数据库则使用第一项配置
 	r.GET("/fill-test-data", d.fillTestData)
-	r.GET("/:dbname", d.list)
+	// 列举所有表
+	r.GET("/list", d.list)
+	// TODO: 分析表
+	// TODO: 优化表
+	// TODO: 检查表
+	// TODO: 修复表
+	// TODO: 清空表
+	// TODO: 删除表
 }
 func (d *databaseManager) fillTestData(c *gin.Context) {
 	t := c.Param("table")
@@ -35,7 +44,14 @@ func (d *databaseManager) fillTestData(c *gin.Context) {
 	c.JSON(200, gin.H{"table": t, "size": s, "tag": tag})
 }
 func (d *databaseManager) list(c *gin.Context) {
-	t := c.Param("tablename")
-	s := c.Query("size")
-	c.JSON(200, gin.H{"table": t, "size": s})
+	tag := c.GetHeader("tag")
+	if len(tag) == 0 {
+		tag = conf.GetFirstServer().Tag
+	}
+	tables, err := d.getTableList(tag)
+	if err != nil {
+		c.JSON(500, err)
+	} else {
+		c.JSON(200, gin.H{"table": tables})
+	}
 }

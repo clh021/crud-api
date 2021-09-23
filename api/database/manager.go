@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -14,19 +16,19 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func (d *databaseManager) getDialectorByTag(tag string) gorm.Dialector {
+func (d *databaseManager) getDialectorByTag(tag string) (gorm.Dialector, error) {
 	c := conf.GetServerByTag(tag)
 	switch c.Type {
 	case "mysql":
-		return mysql.Open(c.Dsn)
+		return mysql.Open(c.Dsn), nil
 	case "sqlite":
-		return sqlite.Open(c.Dsn)
+		return sqlite.Open(c.Dsn), nil
 	case "sqlserver":
-		return sqlserver.Open(c.Dsn)
+		return sqlserver.Open(c.Dsn), nil
 	case "postgres":
-		return postgres.Open(c.Dsn)
+		return postgres.Open(c.Dsn), nil
 	}
-	return mysql.Open(c.Dsn)
+	return nil, fmt.Errorf("not support Database for %s on %s", c.Type, c.Tag)
 }
 
 // 将会在没有找到链接时自动链接
@@ -40,7 +42,12 @@ func (d *databaseManager) getConnByTag(tag string) *gorm.DB {
 }
 
 func (d *databaseManager) addTagConn(tag string) *gorm.DB {
-	db, err := gorm.Open(d.getDialectorByTag(tag), &gorm.Config{
+	log.Println("addTagConn:", tag)
+	di, err := d.getDialectorByTag(tag)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db, err := gorm.Open(di, &gorm.Config{
 		Logger: logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
 			logger.Config{
@@ -59,4 +66,50 @@ func (d *databaseManager) addTagConn(tag string) *gorm.DB {
 		conn: db,
 	})
 	return db
+}
+
+func (d *databaseManager) getTableList(tag string) ([]Table, error) {
+	c := conf.GetServerByTag(tag)
+	var r *sql.Rows
+	var t []Table
+	err := fmt.Errorf("not support Database for %s on %s", c.Type, c.Tag)
+	switch c.Type {
+	case "mysql":
+		db := d.getConnByTag(tag)
+		r, err = db.Debug().Table("information_schema.tables").Not(map[string]interface{}{"table_schema": []string{"performance_schema", "information_schema", "mysql"}}).Rows()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		var cs []string
+		cs, err = r.Columns()
+		defer r.Close()
+		log.Println("cs:", cs)
+		var st MysqlTable
+		for r.Next() {
+			log.Println("r:", r)
+			db.ScanRows(r, &st)
+		}
+		log.Println("t:", st)
+	case "sqlite":
+		db := d.getConnByTag(tag)
+		r, err = db.Debug().Table("sqlite_master").Where("type = ?", "table").Rows()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		var cs []string
+		cs, err = r.Columns()
+		defer r.Close()
+		log.Println("cs:", cs)
+		var st SqliteTable
+		for r.Next() {
+			// ScanRows 方法用于将一行记录扫描至结构体
+			log.Println("r:", r)
+			db.ScanRows(r, &st)
+		}
+		log.Println("t:", st)
+	case "sqlserver":
+	case "postgres":
+		break
+	}
+	return t, err
 }

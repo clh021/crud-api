@@ -15,10 +15,15 @@ func New() *TableManager {
 }
 
 func (t *TableManager) Register(r *gin.RouterGroup) {
+	// 指定表的数据分页
 	r.GET("/:name", t.List)
+	// 指定表，创建记录
 	r.POST("/:name", t.Create)
+	// 指定表，读取记录
 	r.GET("/:name/:pkVal", t.Read)
+	// 指定表，修改记录
 	r.PUT("/:name/:pkVal", t.Update)
+	// 指定表，删除记录
 	r.DELETE("/:name/:pkVal", t.Delete)
 }
 
